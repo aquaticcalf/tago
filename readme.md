@@ -1,3 +1,3 @@
 ## tago
 
-tago is a go html component library inspired by [gomponents](maragu.dev/gomponents)
+tago is a go html component library inspired by [gomponents](https://maragu.dev/gomponents)
