@@ -18,37 +18,64 @@ type Element struct {
 	children []Node
 }
 
-// Option configures an Element ( attributes or children )
-type Option func(*Element)
+// Option configures an Element (attributes or children)
+type Option interface {
+	apply(*Element)
+}
 
-// NewElement constructs an Element for the given tag, applying opts
-func NewElement(tag string, opts ...Option) *Element {
+type optionFunc func(*Element)
+
+func (f optionFunc) apply(e *Element) {
+	f(e)
+}
+
+// NewElement constructs an Element for the given tag, applying any mix of Options or Nodes
+func NewElement(tag string, items ...any) *Element {
 	e := &Element{
 		tag:   tag,
 		attrs: make(map[string]string),
 	}
-	for _, o := range opts {
-		o(e)
+	for _, item := range items {
+		switch v := item.(type) {
+		case Option:
+			v.apply(e)
+		case Node:
+			e.children = append(e.children, v)
+		case string:
+			e.children = append(e.children, Text(v))
+		default:
+			panic(fmt.Sprintf("unsupported element item: %T", item))
+		}
 	}
 	return e
 }
 
 // Attr sets an attribute key="value" on an Element
 func Attr(key, value string) Option {
-	return func(e *Element) {
+	return optionFunc(func(e *Element) {
 		e.attrs[key] = value
-	}
+	})
 }
 
 // Child appends one or more child Nodes to an Element
 func Child(nodes ...Node) Option {
-	return func(e *Element) {
+	return optionFunc(func(e *Element) {
 		e.children = append(e.children, nodes...)
-	}
+	})
 }
 
 // Render outputs the HTML for the Element to w
 func (e *Element) Render(w io.Writer) error {
+	// handle Fragment
+	if e.tag == "" {
+		for _, c := range e.children {
+			if err := c.Render(w); err != nil {
+				return err
+			}
+		}
+		return nil
+	}
+
 	// Opening tag and attributes
 	if _, err := fmt.Fprintf(w, "<%s", e.tag); err != nil {
 		return err
@@ -61,27 +88,22 @@ func (e *Element) Render(w io.Writer) error {
 
 	// Void element : close immediately
 	if isVoidElement(e.tag) {
-		// HTML5 void tags should not have a closing tag
 		_, err := fmt.Fprint(w, ">")
 		return err
 	}
 
-	// Non void : finish opening, render children, then closing
+	// Non-void: render children and closing tag
 	fmt.Fprint(w, ">")
 	for _, c := range e.children {
 		if err := c.Render(w); err != nil {
 			return err
 		}
 	}
-
-	if _, err := fmt.Fprintf(w, "</%s>", e.tag); err != nil {
-		return err
-	}
-
-	return nil
+	_, err := fmt.Fprintf(w, "</%s>", e.tag)
+	return err
 }
 
-// Text represents plain text content ( HTML escaped )
+// Text represents plain text content (HTML escaped)
 type Text string
 
 // Render writes escaped text
