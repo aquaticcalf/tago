@@ -1,0 +1,33 @@
+package tago
+
+func Html(opts ...Option) *Element     { return NewElement("html", opts...) }
+func Head(opts ...Option) *Element     { return NewElement("head", opts...) }
+func Title(opts ...Option) *Element    { return NewElement("title", opts...) }
+func Meta(opts ...Option) *Element     { return NewElement("meta", opts...) }
+func Link(opts ...Option) *Element     { return NewElement("link", opts...) }
+func Body(opts ...Option) *Element     { return NewElement("body", opts...) }
+func Script(opts ...Option) *Element   { return NewElement("script", opts...) }
+func Style(opts ...Option) *Element    { return NewElement("style", opts...) }
+func Div(opts ...Option) *Element      { return NewElement("div", opts...) }
+func Span(opts ...Option) *Element     { return NewElement("span", opts...) }
+func P(opts ...Option) *Element        { return NewElement("p", opts...) }
+func H1(opts ...Option) *Element       { return NewElement("h1", opts...) }
+func H2(opts ...Option) *Element       { return NewElement("h2", opts...) }
+func H3(opts ...Option) *Element       { return NewElement("h3", opts...) }
+func Ul(opts ...Option) *Element       { return NewElement("ul", opts...) }
+func Ol(opts ...Option) *Element       { return NewElement("ol", opts...) }
+func Li(opts ...Option) *Element       { return NewElement("li", opts...) }
+func A(opts ...Option) *Element        { return NewElement("a", opts...) }
+func Img(opts ...Option) *Element      { return NewElement("img", opts...) }
+func Button(opts ...Option) *Element   { return NewElement("button", opts...) }
+func Form(opts ...Option) *Element     { return NewElement("form", opts...) }
+func Input(opts ...Option) *Element    { return NewElement("input", opts...) }
+func Label(opts ...Option) *Element    { return NewElement("label", opts...) }
+func Textarea(opts ...Option) *Element { return NewElement("textarea", opts...) }
+func Select(opts ...Option) *Element   { return NewElement("select", opts...) }
+func Table(opts ...Option) *Element    { return NewElement("table", opts...) }
+func Thead(opts ...Option) *Element    { return NewElement("thead", opts...) }
+func Tbody(opts ...Option) *Element    { return NewElement("tbody", opts...) }
+func Tr(opts ...Option) *Element       { return NewElement("tr", opts...) }
+func Td(opts ...Option) *Element       { return NewElement("td", opts...) }
+func Th(opts ...Option) *Element       { return NewElement("th", opts...) }
