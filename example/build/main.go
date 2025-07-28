@@ -1,7 +1,7 @@
 package main
 
 import (
-	. "github.com/aquaticcalf/tago"
+	. "aqclf.xyz/tago"
 )
 
 func main() {
