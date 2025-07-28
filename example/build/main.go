@@ -1,9 +1,6 @@
 package main
 
 import (
-	"log"
-	"os"
-
 	. "github.com/aquaticcalf/tago"
 )
 
@@ -28,13 +25,5 @@ func main() {
 		),
 	)
 
-	f, err := os.Create("index.html")
-	if err != nil {
-		log.Fatalf("failed to create file : %v", err)
-	}
-	defer f.Close()
-
-	if err := page.Render(f); err != nil {
-		log.Fatalf("failed to render HTML : %v", err)
-	}
+	Build(page, "index")
 }
