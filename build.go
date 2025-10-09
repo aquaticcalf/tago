@@ -1,8 +1,8 @@
 package tago
 
 import (
-	"os"
 	"log"
+	"os"
 )
 
 func Build(page *Element, path string) {
@@ -12,7 +12,7 @@ func Build(page *Element, path string) {
 	}
 	defer f.Close()
 
-	if err := page.Render(f); err != nil {
+	if err := page.Render(f, 0); err != nil {
 		log.Fatalf("failed to render HTML : %v", err)
 	}
 }

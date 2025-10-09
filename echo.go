@@ -12,7 +12,7 @@ func EchoHandler(node Node) echo.HandlerFunc {
 		// Set HTML content type
 		c.Response().Header().Set(echo.HeaderContentType, echo.MIMETextHTMLCharsetUTF8)
 		// Render the HTML
-		if err := node.Render(c.Response().Writer); err != nil {
+		if err := node.Render(c.Response().Writer, 0); err != nil {
 			return echo.NewHTTPError(http.StatusInternalServerError, err.Error())
 		}
 		return nil

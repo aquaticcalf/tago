@@ -4,11 +4,12 @@ import (
 	"fmt"
 	"html"
 	"io"
+	"strings"
 )
 
 // Node is anything that can render itself into HTML
 type Node interface {
-	Render(w io.Writer) error
+	Render(w io.Writer, indent int) error
 }
 
 // Element represents an HTML element with tag, attributes, and children
@@ -65,11 +66,13 @@ func Child(nodes ...Node) Option {
 }
 
 // Render outputs the HTML for the Element to w
-func (e *Element) Render(w io.Writer) error {
+func (e *Element) Render(w io.Writer, indent int) error {
+	indentStr := strings.Repeat(" ", indent)
+
 	// handle Fragment
 	if e.tag == "" {
 		for _, c := range e.children {
-			if err := c.Render(w); err != nil {
+			if err := c.Render(w, indent); err != nil {
 				return err
 			}
 		}
@@ -77,7 +80,7 @@ func (e *Element) Render(w io.Writer) error {
 	}
 
 	// Opening tag and attributes
-	if _, err := fmt.Fprintf(w, "<%s", e.tag); err != nil {
+	if _, err := fmt.Fprintf(w, "%s<%s", indentStr, e.tag); err != nil {
 		return err
 	}
 	for k, v := range e.attrs {
@@ -88,18 +91,30 @@ func (e *Element) Render(w io.Writer) error {
 
 	// Void element : close immediately
 	if isVoidElement(e.tag) {
-		_, err := fmt.Fprint(w, ">")
+		_, err := fmt.Fprint(w, ">\n")
+		return err
+	}
+
+	// Special case: if no children or only one text child, render inline
+	if len(e.children) == 0 || (len(e.children) == 1 && func() bool { _, ok := e.children[0].(Text); return ok }()) {
+		fmt.Fprint(w, ">")
+		for _, c := range e.children {
+			if err := c.Render(w, 0); err != nil {
+				return err
+			}
+		}
+		_, err := fmt.Fprintf(w, "</%s>\n", e.tag)
 		return err
 	}
 
 	// Non-void: render children and closing tag
-	fmt.Fprint(w, ">")
+	fmt.Fprint(w, ">\n")
 	for _, c := range e.children {
-		if err := c.Render(w); err != nil {
+		if err := c.Render(w, indent+2); err != nil {
 			return err
 		}
 	}
-	_, err := fmt.Fprintf(w, "</%s>", e.tag)
+	_, err := fmt.Fprintf(w, "%s</%s>\n", indentStr, e.tag)
 	return err
 }
 
@@ -107,7 +122,7 @@ func (e *Element) Render(w io.Writer) error {
 type Text string
 
 // Render writes escaped text
-func (t Text) Render(w io.Writer) error {
+func (t Text) Render(w io.Writer, indent int) error {
 	_, err := w.Write([]byte(html.EscapeString(string(t))))
 	return err
 }
@@ -116,7 +131,7 @@ func (t Text) Render(w io.Writer) error {
 type Raw string
 
 // Render writes raw HTML
-func (r Raw) Render(w io.Writer) error {
+func (r Raw) Render(w io.Writer, indent int) error {
 	_, err := w.Write([]byte(r))
 	return err
 }
