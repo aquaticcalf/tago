@@ -2,9 +2,13 @@ module aqclf.xyz/tago
 
 go 1.24.4
 
-require github.com/labstack/echo/v4 v4.13.4
+require (
+	aqclf.xyz/tago/css v0.0.0
+	aqclf.xyz/tago/echo v0.0.0
+)
 
 require (
+	github.com/labstack/echo/v4 v4.13.4 // indirect
 	github.com/labstack/gommon v0.4.2 // indirect
 	github.com/mattn/go-colorable v0.1.14 // indirect
 	github.com/mattn/go-isatty v0.0.20 // indirect
@@ -14,4 +18,10 @@ require (
 	golang.org/x/net v0.40.0 // indirect
 	golang.org/x/sys v0.33.0 // indirect
 	golang.org/x/text v0.25.0 // indirect
+)
+
+replace (
+	aqclf.xyz/tago/css => ./css
+	aqclf.xyz/tago/echo => ./echo
+	aqclf.xyz/tago/js => ./js
 )

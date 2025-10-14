@@ -2,6 +2,7 @@ package main
 
 import (
 	. "aqclf.xyz/tago"
+	. "aqclf.xyz/tago/css"
 )
 
 func main() {
