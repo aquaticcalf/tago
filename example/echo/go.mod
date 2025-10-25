@@ -1,12 +1,8 @@
-module example/echo
+module aqclf.xyz/tago/example/echo
 
-go 1.25.3
+go 1.24.4
 
-require (
-	aqclf.xyz/tago v0.0.0
-	aqclf.xyz/tago/css v0.0.0
-	aqclf.xyz/tago/echo v0.0.0
-)
+require aqclf.xyz/tago v0.0.0
 
 require (
 	github.com/labstack/echo/v4 v4.13.4 // indirect
@@ -21,8 +17,4 @@ require (
 	golang.org/x/text v0.25.0 // indirect
 )
 
-replace (
-	aqclf.xyz/tago => ../..
-	aqclf.xyz/tago/css => ../../css
-	aqclf.xyz/tago/echo => ../../echo
-)
+replace aqclf.xyz/tago => ../../
