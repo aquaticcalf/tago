@@ -2,9 +2,6 @@ go 1.25.3
 
 use (
 	.
-	./css
-	./echo
 	./example/build
 	./example/echo
-	./js
 )
